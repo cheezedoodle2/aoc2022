@@ -19,15 +19,23 @@ fn main() {
 
     let mut maxcount: usize = 0;
     let mut count: usize = 0;
+    let mut top: Vec<usize> = vec![0, 0, 0];
 
     s.split('\n').for_each(|line| {
         let trimmed = line.trim();
+
+        // If it's a blank line, see if we have a new high total calorie count.
         if trimmed.is_empty() {
             if count > maxcount {
                 maxcount = count;
             }
+            if count > top[0] {
+                top[0] = count;
+                top.sort();
+            }
             count = 0;
         }
+        // Otherwise, update the total calories.
         else {
             match trimmed.parse::<usize>() {
                 Err(_) => panic!("Error parsing number."),
@@ -37,4 +45,11 @@ fn main() {
     });
 
     println!("maxcount: {}", maxcount);
+    println!("top calories: ");
+    let mut top_total: usize = 0;
+    top.iter().for_each(|n| {
+        top_total += n;
+        println!("  {}", n);
+    });
+    println!("total calories for top {}: {}", top.len(), top_total);
 }
